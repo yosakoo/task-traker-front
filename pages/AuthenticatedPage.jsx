@@ -29,7 +29,7 @@ useEffect(() => {
         throw new Error('Токен доступа не найден в куках');
       }
 
-      const response = await fetch('http://localhost:8080/api/tasks/', {
+      const response = await fetch('http://149.154.64.114:8080/api/tasks/', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -41,11 +41,36 @@ useEffect(() => {
         const completed = data.completed ? data.completed : [];
         const pending = data.pending ? data.pending : [];
         setTasksResponse({ completed, pending });
-      } else {
-        throw new Error('Ошибка при получении задач');
+      } else  {
+        const refreshToken = getCookie('refresh_token');
+        if (refreshToken) {
+          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: refreshToken })
+          });
+
+          if (refreshResponse.ok) {
+            const refreshData = await refreshResponse.json();
+            const accessToken = refreshData.access_token;
+            const newRefreshToken = refreshData.refresh_token;
+          
+            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+          } else {
+            console.error('Ошибка при обновлении токена');
+            window.location.href = '/'; 
+          }
+        } else {
+          console.error('Refresh token not found');
+          window.location.href = '/'; 
+        }
       }
     } catch (error) {
-      console.error('Ошибка при получении задач:', error);
+      console.error('Произошла ошибка:', error);
+      window.location.href = '/';
     }
   };
 
@@ -79,7 +104,7 @@ useEffect(() => {
       const accessTokenRow = document.cookie.split('; ').find(row => row.startsWith('access_token='));
       if (!accessTokenRow) {
         console.error('Токен доступа не найден в куках');
-        window.location.href = '/'; // Редирект на главную страницу
+        window.location.href = '/';
         return;
       }
       const accessToken = accessTokenRow.split('=')[1];
@@ -92,7 +117,7 @@ useEffect(() => {
         title: newTaskTitle.trim()
       };
   
-      const response = await fetch('http://localhost:8080/api/tasks/', {
+      const response = await fetch('http://149.154.64.114:8080/api/tasks/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,12 +133,36 @@ useEffect(() => {
           pending: [...prevState.pending, newTask]
         }));
         setNewTaskTitle('');
-      } else {
-        throw new Error('Ошибка при добавлении задачи');
+      } else  {
+        const refreshToken = getCookie('refresh_token');
+        if (refreshToken) {
+          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: refreshToken })
+          });
+
+          if (refreshResponse.ok) {
+            const refreshData = await refreshResponse.json();
+            const accessToken = refreshData.access_token;
+            const newRefreshToken = refreshData.refresh_token;
+          
+            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+          } else {
+            console.error('Ошибка при обновлении токена');
+            window.location.href = '/'; 
+          }
+        } else {
+          console.error('Refresh token not found');
+          window.location.href = '/'; 
+        }
       }
     } catch (error) {
       console.error('Произошла ошибка:', error);
-      window.location.href = '/'; // Редирект на главную страницу
+      window.location.href = '/'; 
     }
   };
   
@@ -122,7 +171,7 @@ useEffect(() => {
       const accessTokenRow = document.cookie.split('; ').find(row => row.startsWith('access_token='));
       if (!accessTokenRow) {
         console.error('Токен доступа не найден в куках');
-        window.location.href = '/'; // Редирект на главную страницу
+        window.location.href = '/';
         return;
       }
       const accessToken = accessTokenRow.split('=')[1];
@@ -135,7 +184,7 @@ useEffect(() => {
         delete updatedTask.time;
       }
   
-      const response = await fetch(`http://localhost:8080/api/tasks/${updatedTask.id}`, {
+      const response = await fetch(`http://149.154.64.114:8080/api/tasks/${updatedTask.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -157,8 +206,32 @@ useEffect(() => {
           updatedTask.time = null;
           setTimeCompleted(null);
         }
-      } else {
-        throw new Error('Ошибка при изменении статуса задачи');
+      } else  {
+        const refreshToken = getCookie('refresh_token');
+        if (refreshToken) {
+          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: refreshToken })
+          });
+
+          if (refreshResponse.ok) {
+            const refreshData = await refreshResponse.json();
+            const accessToken = refreshData.access_token;
+            const newRefreshToken = refreshData.refresh_token;
+          
+            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+          } else {
+            console.error('Ошибка при обновлении токена');
+            window.location.href = '/'; 
+          }
+        } else {
+          console.error('Refresh token not found');
+          window.location.href = '/'; 
+        }
       }
     } catch (error) {
       console.error('Произошла ошибка:', error);
@@ -176,7 +249,7 @@ useEffect(() => {
       }
       const accessToken = accessTokenRow.split('=')[1];
   
-      const response = await fetch(`http://localhost:8080/api/tasks/${selectedTask.id}`, {
+      const response = await fetch(`http://149.154.64.114:8080/api/tasks/${selectedTask.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -190,13 +263,38 @@ useEffect(() => {
         };
         setTasksResponse(updatedTasksResponse);
         closeModal();
-      } else {
-        throw new Error('Ошибка при удалении задачи');
+      } else  {
+        const refreshToken = getCookie('refresh_token');
+        if (refreshToken) {
+          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: refreshToken })
+          });
+
+          if (refreshResponse.ok) {
+            const refreshData = await refreshResponse.json();
+            const accessToken = refreshData.access_token;
+            const newRefreshToken = refreshData.refresh_token;
+          
+            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+          } else {
+            console.error('Ошибка при обновлении токена');
+            window.location.href = '/'; 
+          }
+        } else {
+          console.error('Refresh token not found');
+          window.location.href = '/'; 
+        }
       }
     } catch (error) {
       console.error('Произошла ошибка:', error);
       window.location.href = '/'; 
     }
+  
   };
 
   const handleTitleChange = (event) => {
@@ -213,7 +311,7 @@ useEffect(() => {
         const accessTokenRow = document.cookie.split('; ').find(row => row.startsWith('access_token='));
         if (!accessTokenRow) {
           console.error('Токен доступа не найден в куках');
-          window.location.href = '/'; // Редирект на главную страницу
+          window.location.href = '/'; 
           return;
         }
         const accessToken = accessTokenRow.split('=')[1];
@@ -224,7 +322,7 @@ useEffect(() => {
   
         const updatedTask = { ...selectedTask, title: editedTitle, text: editedDescription };
   
-        const response = await fetch(`http://localhost:8080/api/tasks/${updatedTask.id}`, {
+        const response = await fetch(`http://149.154.64.114:8080/api/tasks/${updatedTask.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -242,7 +340,7 @@ useEffect(() => {
         } else  {
           const refreshToken = getCookie('refresh_token');
           if (refreshToken) {
-            const refreshResponse = await fetch('http://localhost:8080/api/users/auth/refresh', {
+            const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -255,20 +353,20 @@ useEffect(() => {
               const accessToken = refreshData.access_token;
               const newRefreshToken = refreshData.refresh_token;
             
-              document.cookie = `access_token=${accessToken}; path=/; domain=localhost; secure; samesite=strict`;
-              document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=localhost; secure; samesite=strict`;
+              document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
+              document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
             } else {
               console.error('Ошибка при обновлении токена');
-              window.location.href = '/'; // Редирект на главную страницу
+              window.location.href = '/'; 
             }
           } else {
             console.error('Refresh token not found');
-            window.location.href = '/'; // Редирект на главную страницу
+            window.location.href = '/'; 
           }
         }
       } catch (error) {
         console.error('Произошла ошибка:', error);
-        window.location.href = '/'; // Редирект на главную страницу
+        window.location.href = '/';
       }
     };
   

@@ -19,7 +19,7 @@ const Home = () => {
                 throw new Error('Токены не найдены в куках');
             }
     
-            const response = await fetch('http://localhost:8080/api/users/', {
+            const response = await fetch('http://149.154.64.114:8080/api/users/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -32,7 +32,7 @@ const Home = () => {
                 setIsLoggedIn(true);
                 
             } else if (response.status === 401) {
-                const refreshResponse = await fetch('http://localhost:8080/api/users/auth/refresh', {
+                const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -47,8 +47,8 @@ const Home = () => {
                     accessToken = refreshData.access_token;
                     refreshToken = refreshData.refresh_token;
                 
-                    document.cookie = `access_token=${accessToken}; path=/; domain=localhost; secure; samesite=strict`;
-                    document.cookie = `refresh_token=${refreshToken}; path=/; domain=localhost; secure; samesite=strict`;
+                    document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114;  samesite=None`;
+                    document.cookie = `refresh_token=${refreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
                     
                     console.log(getCookie('refresh_token'))
                     await fetchUserData(accessToken, refreshToken);
@@ -107,7 +107,7 @@ const Home = () => {
         formData.forEach((value, key) => {
             data[key] = value;
         });
-        fetch('http://localhost:8080/api/users/sign-up', {
+        fetch('http://149.154.64.114:8080/api/users/sign-up', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const Home = () => {
         formData.forEach((value, key) => {
             data[key] = value;
         });
-        fetch('http://localhost:8080/api/users/sign-in', {
+        fetch('http://149.154.64.114:8080/api/users/sign-in', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
