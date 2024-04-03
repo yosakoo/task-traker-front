@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './auth.module.css';
 import { useDebounce } from 'use-debounce';
+import {serverUrl, domain} from '../constants/config';
+
 
 
 const AuthenticatedPage = ({ userName }) => {
@@ -29,7 +31,7 @@ useEffect(() => {
         throw new Error('Токен доступа не найден в куках');
       }
 
-      const response = await fetch('http://149.154.64.114:8080/api/tasks/', {
+      const response = await fetch('${serverUrl}/api/tasks/', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -44,7 +46,7 @@ useEffect(() => {
       } else  {
         const refreshToken = getCookie('refresh_token');
         if (refreshToken) {
-          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+          const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -57,8 +59,8 @@ useEffect(() => {
             const accessToken = refreshData.access_token;
             const newRefreshToken = refreshData.refresh_token;
           
-            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
-            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+            document.cookie = `access_token=${accessToken}; path=/; domain=${domain}; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=${domain};  samesite=None`;
           } else {
             console.error('Ошибка при обновлении токена');
             window.location.href = '/'; 
@@ -117,7 +119,7 @@ useEffect(() => {
         title: newTaskTitle.trim()
       };
   
-      const response = await fetch('http://149.154.64.114:8080/api/tasks/', {
+      const response = await fetch(`${serverUrl}/api/tasks/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +138,7 @@ useEffect(() => {
       } else  {
         const refreshToken = getCookie('refresh_token');
         if (refreshToken) {
-          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+          const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -149,8 +151,8 @@ useEffect(() => {
             const accessToken = refreshData.access_token;
             const newRefreshToken = refreshData.refresh_token;
           
-            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
-            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+            document.cookie = `access_token=${accessToken}; path=/; domain=${domain}; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=${domain};  samesite=None`;
           } else {
             console.error('Ошибка при обновлении токена');
             window.location.href = '/'; 
@@ -184,7 +186,7 @@ useEffect(() => {
         delete updatedTask.time;
       }
   
-      const response = await fetch(`http://149.154.64.114:8080/api/tasks/${updatedTask.id}`, {
+      const response = await fetch(`${serverUrl}/api/tasks/${updatedTask.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +211,7 @@ useEffect(() => {
       } else  {
         const refreshToken = getCookie('refresh_token');
         if (refreshToken) {
-          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+          const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -222,8 +224,8 @@ useEffect(() => {
             const accessToken = refreshData.access_token;
             const newRefreshToken = refreshData.refresh_token;
           
-            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
-            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+            document.cookie = `access_token=${accessToken}; path=/; domain=${domain}; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=${domain};  samesite=None`;
           } else {
             console.error('Ошибка при обновлении токена');
             window.location.href = '/'; 
@@ -249,7 +251,7 @@ useEffect(() => {
       }
       const accessToken = accessTokenRow.split('=')[1];
   
-      const response = await fetch(`http://149.154.64.114:8080/api/tasks/${selectedTask.id}`, {
+      const response = await fetch(`${serverUrl}/api/tasks/${selectedTask.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -266,7 +268,7 @@ useEffect(() => {
       } else  {
         const refreshToken = getCookie('refresh_token');
         if (refreshToken) {
-          const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+          const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -279,8 +281,8 @@ useEffect(() => {
             const accessToken = refreshData.access_token;
             const newRefreshToken = refreshData.refresh_token;
           
-            document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
-            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+            document.cookie = `access_token=${accessToken}; path=/; domain=${domain}; samesite=None`;
+            document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=${domain};  samesite=None`;
           } else {
             console.error('Ошибка при обновлении токена');
             window.location.href = '/'; 
@@ -322,7 +324,7 @@ useEffect(() => {
   
         const updatedTask = { ...selectedTask, title: editedTitle, text: editedDescription };
   
-        const response = await fetch(`http://149.154.64.114:8080/api/tasks/${updatedTask.id}`, {
+        const response = await fetch(`${serverUrl}/api/tasks/${updatedTask.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -340,7 +342,7 @@ useEffect(() => {
         } else  {
           const refreshToken = getCookie('refresh_token');
           if (refreshToken) {
-            const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+            const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -353,8 +355,8 @@ useEffect(() => {
               const accessToken = refreshData.access_token;
               const newRefreshToken = refreshData.refresh_token;
             
-              document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114; samesite=None`;
-              document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+              document.cookie = `access_token=${accessToken}; path=/; domain=${domain}; samesite=None`;
+              document.cookie = `refresh_token=${newRefreshToken}; path=/; domain=${domain};  samesite=None`;
             } else {
               console.error('Ошибка при обновлении токена');
               window.location.href = '/'; 

@@ -4,6 +4,7 @@ import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import AuthenticatedPage from './AuthenticatedPage';
 import UnauthenticatedPage from './UnauthenticatedPage';
+import {serverUrl, domain} from '../constants/config';
 
 const Home = () => {
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -19,7 +20,7 @@ const Home = () => {
                 throw new Error('Токены не найдены в куках');
             }
     
-            const response = await fetch('http://149.154.64.114:8080/api/users/', {
+            const response = await fetch(`${serverUrl}/api/users/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -32,7 +33,7 @@ const Home = () => {
                 setIsLoggedIn(true);
                 
             } else if (response.status === 401) {
-                const refreshResponse = await fetch('http://149.154.64.114:8080/api/users/auth/refresh', {
+                const refreshResponse = await fetch(`${serverUrl}/api/users/auth/refresh`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -47,8 +48,8 @@ const Home = () => {
                     accessToken = refreshData.access_token;
                     refreshToken = refreshData.refresh_token;
                 
-                    document.cookie = `access_token=${accessToken}; path=/; domain=149.154.64.114;  samesite=None`;
-                    document.cookie = `refresh_token=${refreshToken}; path=/; domain=149.154.64.114;  samesite=None`;
+                    document.cookie = `access_token=${accessToken}; path=/; domain=${domain};  samesite=None`;
+                    document.cookie = `refresh_token=${refreshToken}; path=/; domain=${domain};  samesite=None`;
                     
                     console.log(getCookie('refresh_token'))
                     await fetchUserData(accessToken, refreshToken);
@@ -107,7 +108,7 @@ const Home = () => {
         formData.forEach((value, key) => {
             data[key] = value;
         });
-        fetch('http://149.154.64.114:8080/api/users/sign-up', {
+        fetch(`${serverUrl}/api/users/sign-up`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,8 +136,8 @@ const Home = () => {
             if (data) {
                 const accessToken = data.access_token;
                 const refreshToken = data.refresh_token;
-                document.cookie = `access_token=${accessToken}; path=/`; 
-                document.cookie = `refresh_token=${refreshToken}; path=/`;
+                document.cookie = `access_token=${accessToken}; path=/;domain=${domain};  samesite=None`; 
+                document.cookie = `refresh_token=${refreshToken}; path=/;domain=${domain};  samesite=None`;
                 
                 setIsRegisterModalOpen(false);
                 setIsLoggedIn(true); 
@@ -154,7 +155,7 @@ const Home = () => {
         formData.forEach((value, key) => {
             data[key] = value;
         });
-        fetch('http://149.154.64.114:8080/api/users/sign-in', {
+        fetch(`${serverUrl}/api/users/sign-in`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -177,8 +178,8 @@ const Home = () => {
             setLoading(false);
             const accessToken = data.access_token;
             const refreshToken = data.refresh_token;
-            document.cookie = `access_token=${accessToken}; path=/`; 
-            document.cookie = `refresh_token=${refreshToken}; path=/`;
+            document.cookie = `access_token=${accessToken}; path=/;domain=${domain};  samesite=None`; 
+            document.cookie = `refresh_token=${refreshToken}; path=/;domain=${domain};  samesite=None`;
     
             setIsLoginModalOpen(false); 
             setIsLoggedIn(true); 
